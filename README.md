@@ -30,8 +30,9 @@ THEN I can save my initials and score
 
 ## Screenshots
 
-My website is meant to emulate the following screenshot:
+My website is meant to emulate the following gif:
 
+![04-web-apis-homework-demo](https://user-images.githubusercontent.com/109035732/185816985-66118420-a9d0-4e70-a26b-bc1eea1aadff.gif)
 
 
 
