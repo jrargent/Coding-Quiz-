@@ -42,7 +42,7 @@ header {
     margin: 10px;
 }
 
-.btn {
+.btn, .start {
     
     outline: none;
     border: none;
