@@ -1,5 +1,6 @@
-var timeLeft = 10;
+var timeLeft = 100;
 var timerEl = document.querySelector("#timer");
+var timerStart = false;
 var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
 var quizContainer = document.querySelector(".quiz-container");
@@ -30,7 +31,11 @@ function incrementQuestion() {
     //startButtonEl.style.display = "none";
     addButtonListeners();
   }
-  countdown();
+
+  countdownStart();
+  
+
+
   setQuestion(questionId++);
 
 }
@@ -57,6 +62,7 @@ function checkAnswer(event) {
     timeLeft -= 10;
     answerValidation.textContent = "Incorrect"
   }
+  // incrementQuestion();
 }
 
 
@@ -114,11 +120,19 @@ function setQuestion(questionNumber) {
 // score is equal to time left when quiz ends. 
 //incorrect answers subtract 10 from the timeInterval
 //quiz ends immediately when time runs out - user loses and gets no score
+// high scores page should have options to clear high score or go back. 
+//go back will re-fresh page
+//Clear high scores should remove the list created by pulling data from localStorage
 
+
+ // should make countdown only call once
+function countdownStart() {
+  if (!timerStart) countdown();
+}
 
 // Timer that counts down
 function countdown() {
-
+  timerStart = true;
   // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
   var timeInterval = setInterval(function () {
     // As long as the `timeLeft` is greater than 1
@@ -138,10 +152,14 @@ function countdown() {
 
     }
   }, 1000);
+  debugger;
 };
+
+
 
 // function for end quiz
 var quizEnd = function () {
+  // quiz container disappears
   quizContainer.style.display = "none";
 
     // selects score container div and makes it appear
@@ -150,24 +168,25 @@ var quizEnd = function () {
         scoreContainerEl.style.display = "flex";
     }
 
-
     
   var scoreHeaderEl = document.querySelector("#score-header");
       scoreHeaderEl.textContent = "Quiz Complete!";
 
+  var scoreContainerPara = document.createElement("p");
+      scoreContainerPara.textContent = "Your final score is " + timeLeft; // need to fix so that it does not show numbers below 0
+        scoreContainerEl.appendChild(scoreContainerPara);   
+
   var enterInitialsEl = document.createElement("form");
       enterInitialsEl.className = "score-submit";
-  
-
-  
-  
-
-  enterInitialsEl.innerHTML = "<h2>Enter Initials: <input type='text'/></h2>";
-    scoreContainerEl.appendChild(enterInitialsEl);
+      enterInitialsEl.innerHTML = "<h2>Enter Initials: <input type='text'/></h2>";
+        scoreContainerEl.appendChild(enterInitialsEl);
 
     var submitButtonEl = document.createElement("button");
         submitButtonEl.className = "submit";
         submitButtonEl.textContent = "Submit";
-        enterInitialsEl.appendChild(submitButtonEl);
+          enterInitialsEl.appendChild(submitButtonEl);
 
 };
+
+// when initials are saved, user input + "-" + timeLeft should be saved into localStorage (set item and JSON stringify)
+// when high scores page is shown again, it should pull that data out of localStorage (get item and JSON parse)
