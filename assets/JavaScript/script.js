@@ -3,7 +3,11 @@ var timerEl = document.querySelector("#timer");
 var timerStart = false;
 var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
+var scoreHeader = document.querySelector("#score-header");
+var highScoreHeader = document.querySelector("#highscore-header")
 var quizContainer = document.querySelector(".quiz-container");
+var scoreContainerEl = document.querySelector(".score-container");
+var highScoreContainer = document.querySelector(".highscore-container");
 var ButtonEl = document.querySelector(".btn");
 var highScore = []
 
@@ -130,14 +134,12 @@ var quizEnd = function () {
   quizContainer.style.display = "none";
 
     // selects score container div and makes it appear
-  var scoreContainerEl = document.querySelector(".score-container");
+  
     if (scoreContainerEl.style.display === "none") {
         scoreContainerEl.style.display = "flex";
     }
 
-    
-  var scoreHeaderEl = document.querySelector("#score-header");
-      scoreHeaderEl.textContent = "Quiz Complete!";
+      scoreHeader.textContent = "Quiz Complete!";
 
   var scoreContainerPara = document.createElement("p");
       scoreContainerPara.textContent = "Your final score is " + timeLeft; // need to fix so that it does not show numbers below 0
@@ -166,11 +168,12 @@ var quizEnd = function () {
 
 function saveScore(event) {
   event.preventDefault();
+  // section for saving initials and score to localStorage
   var initialsInput = document.querySelector("#initials-holder").value;
-          //   if (!initialsInput) {
-          //     alert("Please provide your initials.");
-          //     return false;
-          //   }
+            // if (!initialsInput) {
+            //   alert("Please provide your initials.");
+            //   return false;
+            // }
         
           var highScoreObj = {
             name: initialsInput,
@@ -179,6 +182,32 @@ function saveScore(event) {
           highScore.push(highScoreObj);  
   localStorage.setItem("highScore", JSON.stringify(highScore));
   console.log(highScore);
+
+  viewHighScores();
+  };
+
+
+  function viewHighScores() {
+  quizContainer.style.display = "none";
+  scoreContainerEl.style.display = "none"
+      
+  highScoreHeader.textContent = "High scores";
+  
+  var goBackButton = document.createElement("button");
+  goBackButton.className = "btn";
+  //goBackButton.type = "submit"; // need to make button refresh page
+  goBackButton.textContent = "Go back";
+  //goBackButton.addEventListener("click", restart); //need to create a restart function
+    highScoreContainer.appendChild(goBackButton);
+  
+  var clearScoresButton = document.createElement("button");
+  clearScoresButton.className = "btn";
+  //clearScoresButton.type = "submit";
+  clearScoresButton.textContent = "Clear high scores";
+  //clearScoresButton.addEventListener("click", deleteScores); //need to create this function
+      highScoreContainer.appendChild(clearScoresButton);
+
+
 };
 
 

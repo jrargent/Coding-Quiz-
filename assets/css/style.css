@@ -25,7 +25,7 @@ header {
     font-size: .75em;
 }
 
-.quiz-container {
+.quiz-container, .score-container {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
@@ -35,7 +35,7 @@ header {
 }
 
 
-.btn-container, .score-container {
+.btn-container {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
