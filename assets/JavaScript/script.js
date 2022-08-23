@@ -4,7 +4,7 @@ var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
 var ButtonEl = document.querySelector(".btn");
 
-  // questions, answers, and answers' values exist in a multidimensional array
+  // multidimensional array for questions, answers, and answers' values
 const questions = [
   ["Commonly used data types DO Not Include: ", 
     [["1. strings", false],["2. booleans", false],["3. alerts", true],["4. numbers", false]]],
@@ -17,10 +17,20 @@ const questions = [
   ["A very useful tool used during development and debugging for printing content to the debugger is: ", 
     [["1. JavaScript", false],["2. terminal/bash", false],["3. for loops", false],["4. console.log", false]]]
 ]
+//used to increment question array index
+var questionId = 0;
+startButtonEl.addEventListener("click", incrementQuestion); 
 
-
-
-
+function incrementQuestion() {
+  var buttonContainerEl = document.querySelector(".btn-container");
+  
+  if (buttonContainerEl.style.display === "none") {
+    buttonContainerEl.style.display = "flex";
+    startButtonEl.style.display = "none";
+  }
+  setQuestion(questionId++);
+  console.log(questionId);
+}
 
 
 
@@ -40,29 +50,35 @@ var quizStart = function() {
 quizStart();
 
 
-var quizRun = function() {
-  var buttonContainerEl = document.querySelector(".btn-container");
+function setQuestion(questionNumber) {
   
-  if (buttonContainerEl.style.display === "none") {
-    buttonContainerEl.style.display = "flex";
-    startButtonEl.style.display = "none";
-  }
 
-  questionHeader.textContent = questions[0];
+/*pulling multidimensional array indeces is done as follows:
+    (Refer to const questions array above)
+  to pull the question, format is [i][0]. Example: [0][0] is "Commonly used data types..."
+  to pull the corresponding answer, format is [i][i][i][0]. Example: [0][1][0][0] is "1. strings"
+  to pull the corresponding answer value, format is [i][i][i][1]. Example: [0][1][0][1] is "false"
+
+    numbers in question indeces can be incremented to switch between the questions/answers
+*/
+  
+  questionHeader.textContent = questions[questionNumber][0];
 
   var answerBtn1 = document.querySelector("#a1");
-  answerBtn1.textContent = answers[0];
+  answerBtn1.textContent = questions[questionNumber][1][0][0];
+  answerBtn1.dataset.correct = questions[questionNumber][1][0][1];
+  console.log(answerBtn1.dataset.correct);
 
-  var answerBtn1 = document.querySelector("#a2");
-  answerBtn1.textContent = answers[1];
+  var answerBtn2 = document.querySelector("#a2");
+  answerBtn2.textContent = questions[questionNumber][1][1][0];
 
-  var answerBtn1 = document.querySelector("#a3");
-  answerBtn1.textContent = answers[2];
+  var answerBtn3 = document.querySelector("#a3");
+  answerBtn3.textContent = questions[questionNumber][1][2][0];
 
-  var answerBtn1 = document.querySelector("#a4");
-  answerBtn1.textContent = answers[3];
+  var answerBtn4 = document.querySelector("#a4");
+  answerBtn4.textContent = questions[questionNumber][1][3][0];
 
-  countdown();
+  
 
 
 }
@@ -79,7 +95,7 @@ var quizRun = function() {
 
 //need to set this function to start when button is clicked (set event/add event thing from taskinator)
 
-startButtonEl.addEventListener("click", quizRun); 
+
 
 
 // score is equal to time left when quiz ends. 
