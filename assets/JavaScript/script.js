@@ -6,10 +6,12 @@ var questionHeader = document.querySelector("#question-header");
 var scoreHeader = document.querySelector("#score-header");
 var highScoreHeader = document.querySelector("#highscore-header")
 var quizContainer = document.querySelector(".quiz-container");
+var buttonContainerEl = document.querySelector(".btn-container");
 var scoreContainerEl = document.querySelector(".score-container");
 var highScoreContainer = document.querySelector(".highscore-container");
 var ButtonEl = document.querySelector(".btn");
 var highScore = []
+var scoreIdCounter = 0
 
 // multidimensional array for questions, answers, and answers' values
 const questions = [
@@ -29,7 +31,7 @@ var questionId = 0;
 startButtonEl.addEventListener("click", incrementQuestion);
 
 function incrementQuestion() {
-  var buttonContainerEl = document.querySelector(".btn-container");
+  
 
   if (buttonContainerEl.style.display === "none") {
     buttonContainerEl.style.display = "flex";
@@ -72,7 +74,7 @@ var quizStart = function () {
 
   startButtonEl.textContent = "Start Quiz"
     quizContainer.appendChild(startButtonEl);
-
+  
 };
 
 quizStart();
@@ -166,22 +168,68 @@ var quizEnd = function () {
 // when initials are saved, user input + "-" + timeLeft should be saved into localStorage (set item and JSON stringify)
 // when high scores page is shown again, it should pull that data out of localStorage (get item and JSON parse)
 
+var highScoreHandler = function(event) {
+  event.preventDefault();
+  //grab value user inputs in the input element with name below 
+  var initialsInput = document.querySelector("#initials-holder").value;
+
+  var inputEl = document.querySelector("#initials-holder")
+  var isScore = inputEl.hasAttribute("score-id");
+    //has data attribute, so get score id and then call function to finish showing high scores
+  if (isScore) {
+    var scoreId = inputEl.getAttribute("score-id");
+    loadScores(scoreId);
+    console.log(highScore);
+  }
+  else {
+    // package up data as an object
+    var highScoreObj = {
+      name: initialsInput,
+      score: timeLeft, 
+      id: scoreIdCounter
+    };   
+    // send it as an argument to createScoreList
+    createScoreList(highScoreObj); 
+  }
+}
+
+var createScoreList = function(highScoreObj) {
+    //create list item
+  var listItemEl = document.createElement("li");
+  listItemEl.className = "score-item";
+
+  //add score id as a custom attribute
+  listItemEl.setAttribute("score-id", scoreIdCounter);
+  
+  listItemEl.textContent = highScoreObj.name + " - " + highScoreObj.score;
+  highScoreContainer.appendChild(listItemEl);
+
+
+  highScoreObj.id = scoreIdCounter;
+  highScore.push(highScoreObj);
+
+  // save to localStorage
+  saveScore();
+  // increase score counter for next unique id
+  scoreIdCounter++;
+};
+
+
+
 function saveScore(event) {
   event.preventDefault();
   // section for saving initials and score to localStorage
   var initialsInput = document.querySelector("#initials-holder").value;
-            // if (!initialsInput) {
-            //   alert("Please provide your initials.");
-            //   return false;
-            // }
+          
         
           var highScoreObj = {
             name: initialsInput,
-            score: timeLeft 
+            score: timeLeft, 
+            Id: scoreIdCounter
           }      
           highScore.push(highScoreObj);  
   localStorage.setItem("highScore", JSON.stringify(highScore));
-  
+  scoreIdCounter++;
 
   viewHighScores();
   };
@@ -195,6 +243,7 @@ function saveScore(event) {
   
   var goBackButton = document.createElement("button");
   goBackButton.className = "btn";
+  goBackButton.id = "go-back";
   //goBackButton.type = "submit"; // need to make button refresh page
   goBackButton.textContent = "Go back";
   //goBackButton.addEventListener("click", restart); //need to create a restart function
@@ -226,11 +275,26 @@ var loadHighScores = function() {
 }
 
 function showHighScores(highScore) {
-var listItemEl = document.createElement("li");
-    listItemEl.className = "score-item";
-    listItemEl.textContent = highScore.name + " - " + highScore.score;
-    highScoreContainer.appendChild(listItemEl);
+  
+
+
+   
+    
+
+ var goBackButton = document.querySelector("#go-back"); 
+ //goBackButton.type = "submit";  
+ goBackButton.addEventListener("click", quizRestart); 
+ console.log(highScore);  
+ 
+};
+
+var quizRestart = function(highScore) {
+  localStorage.setItem("highScore", JSON.stringify(highScore));
+  document.location.reload();
 }
+
+
+
 
 
 // should make countdown only call once
@@ -265,3 +329,10 @@ function countdown() {
 
 };
 
+var seeScores = function(event) {
+  event.preventDefault();
+var seeHighScores = document.querySelector("#view-scores");
+seeHighScores.addEventListener("click", viewHighScores);
+
+
+};
