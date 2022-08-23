@@ -1,7 +1,8 @@
-var timeLeft = 100;
+var timeLeft = 10;
 var timerEl = document.querySelector("#timer");
 var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
+var quizContainer = document.querySelector(".quiz-container");
 var ButtonEl = document.querySelector(".btn");
 
 // multidimensional array for questions, answers, and answers' values
@@ -50,29 +51,21 @@ function checkAnswer(event) {
   var button = event.target;
   var answerValidation = document.querySelector("#answer")
   if (button.dataset.correct === "true") {
-    console.log("Hooray!"); // change to show "correct!" at the bottom of screen
       answerValidation.textContent = "Correct"
   }
   else {
-    console.log("Incorrect"); // change to show "incorrect" at the bottom of screen
     timeLeft -= 10;
     answerValidation.textContent = "Incorrect"
   }
 }
 
 
-
-
-
 // function for quiz start - shows upon page load
 var quizStart = function () {
-  startButtonEl.textContent = "Start Quiz"
-
-  var startButtonSet = document.querySelector(".quiz-container");
-  startButtonSet.appendChild(startButtonEl);
-
   questionHeader.textContent = "Coding Quiz Challenge!"
 
+  startButtonEl.textContent = "Start Quiz"
+    quizContainer.appendChild(startButtonEl);
 
 };
 
@@ -141,8 +134,40 @@ function countdown() {
       clearInterval(timeInterval);
 
       // Call the function to end quiz
-
+      quizEnd();
 
     }
   }, 1000);
+};
+
+// function for end quiz
+var quizEnd = function () {
+  quizContainer.style.display = "none";
+
+    // selects score container div and makes it appear
+  var scoreContainerEl = document.querySelector(".score-container");
+    if (scoreContainerEl.style.display === "none") {
+        scoreContainerEl.style.display = "flex";
+    }
+
+
+    
+  var scoreHeaderEl = document.querySelector("#score-header");
+      scoreHeaderEl.textContent = "Quiz Complete!";
+
+  var enterInitialsEl = document.createElement("form");
+      enterInitialsEl.className = "score-submit";
+  
+
+  
+  
+
+  enterInitialsEl.innerHTML = "<h2>Enter Initials: <input type='text'/></h2>";
+    scoreContainerEl.appendChild(enterInitialsEl);
+
+    var submitButtonEl = document.createElement("button");
+        submitButtonEl.className = "submit";
+        submitButtonEl.textContent = "Submit";
+        enterInitialsEl.appendChild(submitButtonEl);
+
 };

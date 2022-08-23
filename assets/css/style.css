@@ -35,14 +35,14 @@ header {
 }
 
 
-.btn-container {
+.btn-container, .score-container {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     margin: 10px;
 }
 
-.btn, .start {
+.btn, .start, .submit {
     
     outline: none;
     border: none;
@@ -62,5 +62,10 @@ header {
     border-top: solid 2px rgba(123, 117, 117, 0.5);
     color: rgba(123, 117, 117, 0.75);
     
+}
 
+#score-submit {
+    display: inline-flex;
+    align-items: center;
+    
 }
