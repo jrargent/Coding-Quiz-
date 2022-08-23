@@ -55,3 +55,12 @@ header {
     top: -3px;
     box-shadow: 0 3px grey;
 }
+
+.answer-validation {
+    display: flex;
+    justify-content: center;
+    border-top: solid 2px rgba(123, 117, 117, 0.5);
+    color: rgba(123, 117, 117, 0.75);
+    
+
+}
