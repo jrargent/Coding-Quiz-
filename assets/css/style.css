@@ -24,3 +24,33 @@ header {
     width: 40%;
     font-size: .75em;
 }
+
+.quiz-container {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 25px auto;
+    width: 95%;
+}
+
+
+.btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.btn {
+    outline: none;
+    border: none;
+    margin: 10px 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background: cornflowerblue;
+    font-size: 1em;
+    position: relative;
+    top: -3px;
+    box-shadow: 0 3px grey);
+}
