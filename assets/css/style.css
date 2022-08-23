@@ -43,6 +43,7 @@ header {
 }
 
 .btn {
+    
     outline: none;
     border: none;
     margin: 10px 15px;
@@ -52,5 +53,5 @@ header {
     font-size: 1em;
     position: relative;
     top: -3px;
-    box-shadow: 0 3px grey);
+    box-shadow: 0 3px grey;
 }
