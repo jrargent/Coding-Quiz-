@@ -1,4 +1,4 @@
-var timeLeft = 10;
+var timeLeft = 100;
 var timerEl = document.querySelector("#timer");
 var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
@@ -15,7 +15,7 @@ const questions = [
   ["String values must be enclosed within _______ when being assigned to variables. ", 
     [["1. commas", false],["2. curly brackets", false],["3. quotes", true],["4. parenthesis", false]]],
   ["A very useful tool used during development and debugging for printing content to the debugger is: ", 
-    [["1. JavaScript", false],["2. terminal/bash", false],["3. for loops", false],["4. console.log", false]]]
+    [["1. JavaScript", false],["2. terminal/bash", false],["3. for loops", false],["4. console.log", true]]]
 ]
 //used to increment question array index
 var questionId = 0;
@@ -26,11 +26,37 @@ function incrementQuestion() {
   
   if (buttonContainerEl.style.display === "none") {
     buttonContainerEl.style.display = "flex";
-    startButtonEl.style.display = "none";
+    //startButtonEl.style.display = "none";
+    addButtonListeners();
   }
+  countdown();
   setQuestion(questionId++);
-  console.log(questionId);
+  
 }
+
+// function to add clicks to answer buttons and to check answers
+function addButtonListeners() {
+  var answerBtn1 = document.querySelector("#a1");
+    answerBtn1.addEventListener("click", checkAnswer); //add a check answer function. Will check value and then increment to next question
+  var answerBtn2 = document.querySelector("#a2");
+    answerBtn2.addEventListener("click", checkAnswer);
+  var answerBtn3 = document.querySelector("#a3");
+    answerBtn3.addEventListener("click", checkAnswer);
+  var answerBtn4 = document.querySelector("#a4");
+    answerBtn4.addEventListener("click", checkAnswer);
+}
+
+function checkAnswer(event) {
+  var button = event.target;
+  if (button.dataset.correct === "true") {
+    console.log("Hooray!"); // change to show "correct!" at the bottom of screen
+  }
+  else {
+    console.log("Incorrect"); // change to show "incorrect" at the bottom of screen
+    timeLeft -= 10;
+  }
+}
+
 
 
 
@@ -71,29 +97,20 @@ function setQuestion(questionNumber) {
 
   var answerBtn2 = document.querySelector("#a2");
   answerBtn2.textContent = questions[questionNumber][1][1][0];
+  answerBtn2.dataset.correct = questions[questionNumber][1][1][1];
+  console.log(answerBtn2.dataset.correct)
 
   var answerBtn3 = document.querySelector("#a3");
   answerBtn3.textContent = questions[questionNumber][1][2][0];
+  answerBtn3.dataset.correct = questions[questionNumber][1][2][1];
+  console.log(answerBtn3.dataset.correct)
 
   var answerBtn4 = document.querySelector("#a4");
   answerBtn4.textContent = questions[questionNumber][1][3][0];
-
-  
-
+  answerBtn4.dataset.correct = questions[questionNumber][1][3][1];
+  console.log(answerBtn4.dataset.correct)
 
 }
-
-
-
-//have 
-//key value pairs - key, value. Array is key value pairs. Key is question, value is another array that is those four answers 
-//and whether they are correct or not. the answer array will be key is answer and value is true/false
-
-
-
-
-
-//need to set this function to start when button is clicked (set event/add event thing from taskinator)
 
 
 
