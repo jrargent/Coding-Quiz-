@@ -181,7 +181,7 @@ function saveScore(event) {
           }      
           highScore.push(highScoreObj);  
   localStorage.setItem("highScore", JSON.stringify(highScore));
-  console.log(highScore);
+  
 
   viewHighScores();
   };
@@ -207,10 +207,30 @@ function saveScore(event) {
   //clearScoresButton.addEventListener("click", deleteScores); //need to create this function
       highScoreContainer.appendChild(clearScoresButton);
 
-
+ 
+  loadHighScores();
 };
 
+var loadHighScores = function() {
+  var savedScores = localStorage.getItem("highScore");
 
+  if (!savedScores) {
+    return false;
+  } 
+  savedScores = JSON.parse(savedScores);
+  console.log(savedScores);
+
+  for (var i = 0; i < savedScores.length; i++) {
+    showHighScores(savedScores[i]);
+  }
+}
+
+function showHighScores(highScore) {
+var listItemEl = document.createElement("li");
+    listItemEl.className = "score-item";
+    listItemEl.textContent = highScore.name + " - " + highScore.score;
+    highScoreContainer.appendChild(listItemEl);
+}
 
 
 // should make countdown only call once
