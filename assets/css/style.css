@@ -41,6 +41,11 @@ header {
     flex-direction: column;
     margin: 10px;
 }
+.highscore-container {
+display: flex;
+justify-content: center;
+
+}
 
 .btn, .start, .submit {
     

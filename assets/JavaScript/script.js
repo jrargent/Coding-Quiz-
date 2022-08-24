@@ -1,6 +1,7 @@
-var timeLeft = 10;
+var timeLeft = 100;
 var timerEl = document.querySelector("#timer");
 var timerStart = false;
+var intervalId;
 var startButtonEl = document.querySelector(".start");
 var questionHeader = document.querySelector("#question-header");
 var scoreHeader = document.querySelector("#score-header");
@@ -35,11 +36,13 @@ function incrementQuestion() {
 
   if (buttonContainerEl.style.display === "none") {
     buttonContainerEl.style.display = "flex";
-    //startButtonEl.style.display = "none";
+    startButtonEl.style.display = "none";
     addButtonListeners();
   }
   countdownStart();
   setQuestion(questionId++);
+
+  
 }
 
 // function to add clicks to answer buttons and to check answers
@@ -64,7 +67,13 @@ function checkAnswer(event) {
     timeLeft -= 10;
     answerValidation.textContent = "Incorrect"
   }
-  // incrementQuestion();
+   
+  if (questionId >= questions.length) {
+    quizEnd();
+  }
+  else {
+  incrementQuestion();
+  }
 }
 
 
@@ -72,13 +81,13 @@ function checkAnswer(event) {
 var quizStart = function () {
   questionHeader.textContent = "Coding Quiz Challenge!"
 
-  startButtonEl.textContent = "Start Quiz"
-    quizContainer.appendChild(startButtonEl);
+  startButtonEl.textContent = "Start Quiz";
+  quizContainer.appendChild(startButtonEl);
   
+  highScoreContainer.style.display = "none";
 };
 
 quizStart();
-
 
 function setQuestion(questionNumber) {
 
@@ -97,7 +106,7 @@ function setQuestion(questionNumber) {
   var answerBtn1 = document.querySelector("#a1");
   answerBtn1.textContent = questions[questionNumber][1][0][0];
   answerBtn1.dataset.correct = questions[questionNumber][1][0][1];
-  console.log(answerBtn1.dataset.correct); // remove console.logs before push to production
+  console.debug(answerBtn1.dataset.correct); // remove console.logs before push to production
 
   var answerBtn2 = document.querySelector("#a2");
   answerBtn2.textContent = questions[questionNumber][1][1][0];
@@ -114,6 +123,7 @@ function setQuestion(questionNumber) {
   answerBtn4.dataset.correct = questions[questionNumber][1][3][1];
   console.log(answerBtn4.dataset.correct)
 
+  
 }
 
 
@@ -130,8 +140,10 @@ function setQuestion(questionNumber) {
  
 
 // function for end quiz
-var quizEnd = function () {
+function quizEnd() {
   
+  clearInterval(intervalId);
+  timerEl.textContent = "Time: " + timeLeft;
   // quiz container disappears
   quizContainer.style.display = "none";
 
@@ -156,44 +168,31 @@ var quizEnd = function () {
         submitButtonEl.className = "submit";
         submitButtonEl.type = "submit";
         submitButtonEl.textContent = "Submit";
-        submitButtonEl.addEventListener("click", saveScore);
-          enterInitialsEl.appendChild(submitButtonEl);
-     
-  
-          
-          
-
+        submitButtonEl.addEventListener("click", highScoreHandler);
+        enterInitialsEl.appendChild(submitButtonEl);
 };
 
 // when initials are saved, user input + "-" + timeLeft should be saved into localStorage (set item and JSON stringify)
 // when high scores page is shown again, it should pull that data out of localStorage (get item and JSON parse)
 
-var highScoreHandler = function(event) {
+function highScoreHandler(event) {
   event.preventDefault();
   //grab value user inputs in the input element with name below 
   var initialsInput = document.querySelector("#initials-holder").value;
 
-  var inputEl = document.querySelector("#initials-holder")
-  var isScore = inputEl.hasAttribute("score-id");
-    //has data attribute, so get score id and then call function to finish showing high scores
-  if (isScore) {
-    var scoreId = inputEl.getAttribute("score-id");
-    loadScores(scoreId);
-    console.log(highScore);
-  }
-  else {
-    // package up data as an object
+   // has data attribute, so get score id and then call function to finish showing high scores
+   // package up data as an object
     var highScoreObj = {
       name: initialsInput,
       score: timeLeft, 
       id: scoreIdCounter
     };   
     // send it as an argument to createScoreList
-    createScoreList(highScoreObj); 
-  }
-}
+    createScoreList(highScoreObj);
+    viewHighScores();
+};
 
-var createScoreList = function(highScoreObj) {
+function createScoreList(highScoreObj) {
     //create list item
   var listItemEl = document.createElement("li");
   listItemEl.className = "score-item";
@@ -204,98 +203,63 @@ var createScoreList = function(highScoreObj) {
   listItemEl.textContent = highScoreObj.name + " - " + highScoreObj.score;
   highScoreContainer.appendChild(listItemEl);
 
+   highScoreObj.id = scoreIdCounter;
+  // scoreIdCounter++;
 
-  highScoreObj.id = scoreIdCounter;
   highScore.push(highScoreObj);
-
   // save to localStorage
   saveScore();
-  // increase score counter for next unique id
-  scoreIdCounter++;
 };
 
 
-
-function saveScore(event) {
-  event.preventDefault();
-  // section for saving initials and score to localStorage
-  var initialsInput = document.querySelector("#initials-holder").value;
-          
-        
-          var highScoreObj = {
-            name: initialsInput,
-            score: timeLeft, 
-            Id: scoreIdCounter
-          }      
-          highScore.push(highScoreObj);  
+function saveScore() {  
   localStorage.setItem("highScore", JSON.stringify(highScore));
-  scoreIdCounter++;
-
-  viewHighScores();
-  };
+};
 
 
-  function viewHighScores() {
+  function loadScores() {
+    var savedScores = localStorage.getItem("highScore");
+
+    if (!savedScores) {
+      debugger;
+      return false;
+    } 
+
+    savedScores = JSON.parse(savedScores);
+
+    for (var i = 0; i < savedScores.length; i++) {
+      createScoreList(savedScores[i]);
+    }
+};
+
+function viewHighScores() {
   quizContainer.style.display = "none";
   scoreContainerEl.style.display = "none"
-      
+  
+  highScoreContainer.style.display = "flex";
   highScoreHeader.textContent = "High scores";
   
-  var goBackButton = document.createElement("button");
-  goBackButton.className = "btn";
-  goBackButton.id = "go-back";
-  //goBackButton.type = "submit"; // need to make button refresh page
-  goBackButton.textContent = "Go back";
-  //goBackButton.addEventListener("click", restart); //need to create a restart function
-    highScoreContainer.appendChild(goBackButton);
-  
-  var clearScoresButton = document.createElement("button");
-  clearScoresButton.className = "btn";
-  //clearScoresButton.type = "submit";
-  clearScoresButton.textContent = "Clear high scores";
-  //clearScoresButton.addEventListener("click", deleteScores); //need to create this function
-      highScoreContainer.appendChild(clearScoresButton);
-
- 
-  loadHighScores();
-};
-
-var loadHighScores = function() {
-  var savedScores = localStorage.getItem("highScore");
-
-  if (!savedScores) {
-    return false;
-  } 
-  savedScores = JSON.parse(savedScores);
-  console.log(savedScores);
-
-  for (var i = 0; i < savedScores.length; i++) {
-    showHighScores(savedScores[i]);
-  }
-}
-
-function showHighScores(highScore) {
-  
-
-
-   
+  if(document.getElementById("go-back") == null){
+    var goBackButton = document.createElement("button");
+    goBackButton.className = "btn";
+    goBackButton.id = "go-back";
     
+    goBackButton.textContent = "Go back";
+    goBackButton.addEventListener("click", quizRestart); 
+    highScoreContainer.appendChild(goBackButton);
 
- var goBackButton = document.querySelector("#go-back"); 
- //goBackButton.type = "submit";  
- goBackButton.addEventListener("click", quizRestart); 
- console.log(highScore);  
- 
+    var clearScoresButton = document.createElement("button");
+    clearScoresButton.className = "btn";
+    
+    clearScoresButton.textContent = "Clear high scores";
+    //clearScoresButton.addEventListener("click", deleteScores); //need to create this function
+    highScoreContainer.appendChild(clearScoresButton);
+  }
 };
 
-var quizRestart = function(highScore) {
-  localStorage.setItem("highScore", JSON.stringify(highScore));
+var quizRestart = function() {
   document.location.reload();
 }
-
-
-
-
 
 // should make countdown only call once
 function countdownStart() {
@@ -306,7 +270,7 @@ function countdownStart() {
 function countdown() {
   timerStart = true;
   // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-  var timeInterval = setInterval(function () {
+  intervalId = setInterval(function () {
     // As long as the `timeLeft` is greater than 1
     if (timeLeft > 0) {
       // Set the `textContent` of `timerEl` to show the remaining seconds
@@ -317,22 +281,13 @@ function countdown() {
       // Once `timeLeft` gets to 0, set `timerEl` to an empty string
       timerEl.textContent = "Time: 0";
       // Use `clearInterval()` to stop the timer
-      clearInterval(timeInterval);
-
+      if (timeLeft < 0) {
+        timeLeft = 0;
+      }
       // Call the function to end quiz
       quizEnd(); 
-        
-      
-
     }
   }, 1000);
+}
 
-};
-
-var seeScores = function(event) {
-  event.preventDefault();
-var seeHighScores = document.querySelector("#view-scores");
-seeHighScores.addEventListener("click", viewHighScores);
-
-
-};
+loadScores();
