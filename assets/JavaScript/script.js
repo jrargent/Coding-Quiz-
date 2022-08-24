@@ -193,6 +193,9 @@ function highScoreHandler(event) {
 };
 
 function createScoreList(highScoreObj) {
+
+  var orderListItem = document.querySelector(".order-item");
+
     //create list item
   var listItemEl = document.createElement("li");
   listItemEl.className = "score-item";
@@ -201,12 +204,16 @@ function createScoreList(highScoreObj) {
   listItemEl.setAttribute("score-id", scoreIdCounter);
   
   listItemEl.textContent = highScoreObj.name + " - " + highScoreObj.score;
-  highScoreContainer.appendChild(listItemEl);
+  orderListItem.appendChild(listItemEl);
+
 
    highScoreObj.id = scoreIdCounter;
   // scoreIdCounter++;
 
   highScore.push(highScoreObj);
+
+  //sorting of scores
+  highScore.sort((a, b) => b.score - a.score);
   // save to localStorage
   saveScore();
 };
@@ -240,22 +247,33 @@ function viewHighScores() {
   highScoreHeader.textContent = "High scores";
   
   if(document.getElementById("go-back") == null){
+
+    var buttonsDivEl = document.createElement("div");
+    buttonsDivEl.className = "btn-container col-3";
+    highScoreContainer.appendChild(buttonsDivEl);
+
     var goBackButton = document.createElement("button");
     goBackButton.className = "btn";
     goBackButton.id = "go-back";
     
     goBackButton.textContent = "Go back";
     goBackButton.addEventListener("click", quizRestart); 
-    highScoreContainer.appendChild(goBackButton);
+    buttonsDivEl.appendChild(goBackButton);
 
     var clearScoresButton = document.createElement("button");
     clearScoresButton.className = "btn";
     
     clearScoresButton.textContent = "Clear high scores";
-    //clearScoresButton.addEventListener("click", deleteScores); //need to create this function
-    highScoreContainer.appendChild(clearScoresButton);
+    clearScoresButton.addEventListener("click", deleteScores);
+    buttonsDivEl.appendChild(clearScoresButton);
   }
 };
+
+function deleteScores() {
+  localStorage.removeItem("highScore");
+  quizRestart();
+  viewHighScores();
+}
 
 var quizRestart = function() {
   document.location.reload();

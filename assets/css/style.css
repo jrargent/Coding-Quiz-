@@ -25,13 +25,20 @@ header {
     font-size: .75em;
 }
 
-.quiz-container, .score-container {
+#question-header {
+    text-align: center;
+    width: 100%;
+}
+
+
+
+ .quiz-container, .score-container {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 25px auto;
-    width: 95%;
+    width: 100%;
 }
 
 
@@ -39,13 +46,10 @@ header {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
+    justify-content: center;
     margin: 10px;
 }
-.highscore-container {
-display: flex;
-justify-content: center;
 
-}
 
 .btn, .start, .submit {
     
@@ -61,6 +65,9 @@ justify-content: center;
     box-shadow: 0 3px grey;
 }
 
+
+
+
 .answer-validation {
     display: flex;
     justify-content: center;
@@ -74,4 +81,13 @@ justify-content: center;
     align-items: center;
     
 }
+
+.order-item {
+    background-color: grey;
+    padding-left: 25px;
+    padding-right: 5px;
+
+}
+
+
 /*Need to add highlighting of button on hover*/
